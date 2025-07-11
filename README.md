@@ -83,7 +83,7 @@ resumesnap/
 
 ### 1. Client-Side PDF Generation
 
-Uses html2pdf.js to convert the HTML resume preview into a high-quality PDF without requiring a server.
+Uses html2canva-pro and jspdf to convert the HTML resume preview into a high-quality PDF without requiring a server.
 
 ### 2. Freemium Monetization
 
