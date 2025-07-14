@@ -144,9 +144,8 @@ export default function ResumeForm({
         throw new Error("Resume preview not found");
       }
 
-      // Usa html2canvas-pro com CORS e scale alto para Tailwind
       const canvas = await html2canvas(element, {
-        scale: 1,
+        scale: 0.5,
         useCORS: true,
         allowTaint: true,
         logging: true,
@@ -164,7 +163,6 @@ export default function ResumeForm({
       pdf.addImage(imgData, "PNG", 0, 0, canvas.width, canvas.height);
       pdf.save(`${resumeData.personalInfo.fullName || "resume"}.pdf`);
 
-      // Atualiza contagem se não for Pro
       if (!isPro) {
         localStorage.setItem("resumeDownloads", (downloads + 1).toString());
       }

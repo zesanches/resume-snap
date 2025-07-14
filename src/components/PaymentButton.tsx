@@ -15,19 +15,15 @@ export default function PaymentButton({ onUpgrade }: PaymentButtonProps) {
   const handleUpgrade = async () => {
     setIsProcessing(true);
 
-    // Simulate payment processing (replace with actual Stripe integration)
     try {
-      // For demo purposes, we'll simulate a successful payment after 2 seconds
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
-      // Mark user as Pro
       localStorage.setItem("resumeProUser", "true");
       localStorage.setItem("resumeUpgradeDate", new Date().toISOString());
 
       alert("🎉 Welcome to ResumeSnap Pro! You now have unlimited downloads.");
       onUpgrade();
 
-      // Refresh the page to update UI
       window.location.reload();
     } catch (error) {
       console.error("Payment failed:", error);
@@ -38,7 +34,6 @@ export default function PaymentButton({ onUpgrade }: PaymentButtonProps) {
   };
 
   const handleDonate = () => {
-    // Open Buy Me a Coffee or similar donation platform
     window.open("https://buymeacoffee.com/resumesnap", "_blank");
   };
 
