@@ -18,8 +18,10 @@ export default function PaymentButton({ onUpgrade }: PaymentButtonProps) {
     try {
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
-      localStorage.setItem("resumeProUser", "true");
-      localStorage.setItem("resumeUpgradeDate", new Date().toISOString());
+      if (window !== undefined) {
+        localStorage.setItem("resumeProUser", "true");
+        localStorage.setItem("resumeUpgradeDate", new Date().toISOString());
+      }
 
       alert("🎉 Welcome to ResumeSnap Pro! You now have unlimited downloads.");
       onUpgrade();

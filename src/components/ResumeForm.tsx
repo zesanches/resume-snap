@@ -121,58 +121,71 @@ export default function ResumeForm({
   };
 
   const generatePDF = async () => {
-    // Check download limit
-    const downloads = Number.parseInt(
-      localStorage.getItem("resumeDownloads") || "0"
-    );
-    const isPro = localStorage.getItem("resumeProUser") === "true";
+    if (window !== undefined) {
+      // Check download limit
+      const downloads = Number.parseInt(
+        localStorage.getItem("resumeDownloads") || "0"
+      );
+      const isPro = localStorage.getItem("resumeProUser") === "true";
 
-    if (!isPro && downloads >= 2) {
-      onUpgradeNeeded();
-      return;
-    }
-
-    setIsGenerating(true);
-
-    try {
-      // Dynamic import for SSR safety
-      const html2canvas = (await import("html2canvas-pro")).default;
-      const { jsPDF } = await import("jspdf");
-
-      const element = document.getElementById("resume-preview");
-      if (!element) {
-        throw new Error("Resume preview not found");
+      if (!isPro && downloads >= 2) {
+        onUpgradeNeeded();
+        return;
       }
 
-      const canvas = await html2canvas(element, {
-        scale: 0.5,
-        useCORS: true,
-        allowTaint: true,
-        logging: true,
-      });
+      setIsGenerating(true);
 
-      const imgData = canvas.toDataURL("image/png");
+      try {
+        // Dynamic import for SSR safety
+        const html2canvas = (await import("html2canvas-pro")).default;
+        const { jsPDF } = await import("jspdf");
 
-      // Cria PDF usando jspdf
-      const pdf = new jsPDF({
-        orientation: "portrait",
-        unit: "px",
-        format: [canvas.width, canvas.height],
-      });
+        const element = document.getElementById("resume-preview");
+        if (!element) {
+          throw new Error("Resume preview not found");
+        }
 
-      pdf.addImage(imgData, "PNG", 0, 0, canvas.width, canvas.height);
-      pdf.save(`${resumeData.personalInfo.fullName || "resume"}.pdf`);
+        const canvas = await html2canvas(element, {
+          scale: 0.5,
+          useCORS: true,
+          allowTaint: true,
+          logging: true,
+        });
 
-      if (!isPro) {
-        localStorage.setItem("resumeDownloads", (downloads + 1).toString());
+        const imgData = canvas.toDataURL("image/png");
+
+        // Cria PDF usando jspdf
+        const pdf = new jsPDF({
+          orientation: "portrait",
+          unit: "px",
+          format: [canvas.width, canvas.height],
+        });
+
+        pdf.addImage(imgData, "PNG", 0, 0, canvas.width, canvas.height);
+        pdf.save(`${resumeData.personalInfo.fullName || "resume"}.pdf`);
+
+        if (!isPro) {
+          localStorage.setItem("resumeDownloads", (downloads + 1).toString());
+        }
+      } catch (error) {
+        console.error("Error generating PDF:", error);
+        alert("Error generating PDF. Please try again.");
+      } finally {
+        setIsGenerating(false);
       }
-    } catch (error) {
-      console.error("Error generating PDF:", error);
-      alert("Error generating PDF. Please try again.");
-    } finally {
-      setIsGenerating(false);
     }
   };
+
+  if (window === undefined) {
+    return (
+      <div className="text-center py-8">
+        <p className="text-gray-500">
+          This form is only available in the browser. Please open this page in a
+          web browser to create your resume.
+        </p>
+      </div>
+    );
+  }
 
   const downloads = Number.parseInt(
     localStorage.getItem("resumeDownloads") || "0"
