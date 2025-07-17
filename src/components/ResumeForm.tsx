@@ -24,6 +24,7 @@ export default function ResumeForm({
 }: ResumeFormProps) {
   const [isGenerating, setIsGenerating] = useState(false);
   const [skillInput, setSkillInput] = useState("");
+  const localStorage = window.localStorage;
 
   const updatePersonalInfo = (field: string, value: string) => {
     setResumeData({
@@ -124,9 +125,9 @@ export default function ResumeForm({
     if (window !== undefined) {
       // Check download limit
       const downloads = Number.parseInt(
-        window.localStorage.getItem("resumeDownloads") || "0"
+        localStorage.getItem("resumeDownloads") || "0"
       );
-      const isPro = window.localStorage.getItem("resumeProUser") === "true";
+      const isPro = localStorage.getItem("resumeProUser") === "true";
 
       if (!isPro && downloads >= 2) {
         onUpgradeNeeded();
@@ -165,10 +166,7 @@ export default function ResumeForm({
         pdf.save(`${resumeData.personalInfo.fullName || "resume"}.pdf`);
 
         if (!isPro) {
-          window.localStorage.setItem(
-            "resumeDownloads",
-            (downloads + 1).toString()
-          );
+          localStorage.setItem("resumeDownloads", (downloads + 1).toString());
         }
       } catch (error) {
         console.error("Error generating PDF:", error);
@@ -191,9 +189,9 @@ export default function ResumeForm({
   }
 
   const downloads = Number.parseInt(
-    window.localStorage.getItem("resumeDownloads") || "0"
+    localStorage.getItem("resumeDownloads") || "0"
   );
-  const isPro = window.localStorage.getItem("resumeProUser") === "true";
+  const isPro = localStorage.getItem("resumeProUser") === "true";
   const remainingDownloads = isPro ? "∞" : Math.max(0, 2 - downloads);
 
   return (

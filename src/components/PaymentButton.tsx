@@ -10,7 +10,8 @@ interface PaymentButtonProps {
 
 export default function PaymentButton({ onUpgrade }: PaymentButtonProps) {
   const [isProcessing, setIsProcessing] = useState(false);
-  const isPro = window.localStorage.getItem("resumeProUser") === "true";
+  const localStorage = window.localStorage;
+  const isPro = localStorage.getItem("resumeProUser") === "true";
 
   const handleUpgrade = async () => {
     setIsProcessing(true);
@@ -19,11 +20,8 @@ export default function PaymentButton({ onUpgrade }: PaymentButtonProps) {
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
       if (window !== undefined) {
-        window.localStorage.setItem("resumeProUser", "true");
-        window.localStorage.setItem(
-          "resumeUpgradeDate",
-          new Date().toISOString()
-        );
+        localStorage.setItem("resumeProUser", "true");
+        localStorage.setItem("resumeUpgradeDate", new Date().toISOString());
       }
 
       alert("🎉 Welcome to ResumeSnap Pro! You now have unlimited downloads.");
