@@ -124,9 +124,9 @@ export default function ResumeForm({
     if (window !== undefined) {
       // Check download limit
       const downloads = Number.parseInt(
-        localStorage.getItem("resumeDownloads") || "0"
+        window.localStorage.getItem("resumeDownloads") || "0"
       );
-      const isPro = localStorage.getItem("resumeProUser") === "true";
+      const isPro = window.localStorage.getItem("resumeProUser") === "true";
 
       if (!isPro && downloads >= 2) {
         onUpgradeNeeded();
@@ -165,7 +165,10 @@ export default function ResumeForm({
         pdf.save(`${resumeData.personalInfo.fullName || "resume"}.pdf`);
 
         if (!isPro) {
-          localStorage.setItem("resumeDownloads", (downloads + 1).toString());
+          window.localStorage.setItem(
+            "resumeDownloads",
+            (downloads + 1).toString()
+          );
         }
       } catch (error) {
         console.error("Error generating PDF:", error);
@@ -188,9 +191,9 @@ export default function ResumeForm({
   }
 
   const downloads = Number.parseInt(
-    localStorage.getItem("resumeDownloads") || "0"
+    window.localStorage.getItem("resumeDownloads") || "0"
   );
-  const isPro = localStorage.getItem("resumeProUser") === "true";
+  const isPro = window.localStorage.getItem("resumeProUser") === "true";
   const remainingDownloads = isPro ? "∞" : Math.max(0, 2 - downloads);
 
   return (
