@@ -47,7 +47,7 @@ export default function CreatePage() {
                 </span>
               </div>
             </div>
-            <PaymentButton onUpgrade={() => setShowUpgrade(false)} />
+            <PaymentButton />
           </div>
         </div>
       </header>
@@ -98,7 +98,7 @@ export default function CreatePage() {
                   unlimited PDF downloads.
                 </p>
                 <div className="space-y-2">
-                  <PaymentButton onUpgrade={() => setShowUpgrade(false)} />
+                  <PaymentButton />
                   <Button
                     variant="outline"
                     className="w-full bg-transparent"
