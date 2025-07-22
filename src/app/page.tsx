@@ -35,7 +35,7 @@ export default function HomePage() {
           </Button>
         </Link>
         <p className="text-sm text-gray-500 mt-4">
-          ✨ 2 free PDF downloads • No signup required • Works offline
+          ✨ 2 free PDF downloads • Fast signup • Works offline
         </p>
       </section>
 
@@ -94,7 +94,7 @@ export default function HomePage() {
           </h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
-              "No signup required",
+              "Fast signup",
               "Works completely offline",
               "Professional templates",
               "Instant PDF download",

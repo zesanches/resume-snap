@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   title:
     "ResumeSnap - Create Professional Resumes Online | Free Resume Builder",
   description:
-    "Build stunning, professional resumes in minutes with ResumeSnap. No signup required. Download as PDF instantly. ATS-friendly templates. Start free today!",
+    "Build stunning, professional resumes in minutes with ResumeSnap. Fast signup. Download as PDF instantly. ATS-friendly templates. Start free today!",
   keywords:
     "resume builder, CV maker, professional resume, job application, PDF resume, free resume, online resume builder",
   authors: [{ name: "ResumeSnap" }],
@@ -22,14 +22,16 @@ export const metadata: Metadata = {
     url: "https://resumesnap.com",
     title: "ResumeSnap - Create Professional Resumes Online",
     description:
-      "Build stunning, professional resumes in minutes. No signup required. Download as PDF instantly.",
+      "Build stunning, professional resumes in minutes. Fast signup. Download as PDF instantly.",
     siteName: "ResumeSnap",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "ResumeSnap - Create Professional Resumes Online",
-    description:
-      "Build stunning, professional resumes in minutes. No signup required. Download as PDF instantly.",
+    images: [
+      {
+        url: "https://resumesnap.com/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "ResumeSnap - Create Professional Resumes Online",
+      },
+    ],
   },
 };
 

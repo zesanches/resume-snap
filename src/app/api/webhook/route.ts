@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
       webhookSecret
     );
 
-    if (event.type === "checkout.session.completed") {
+    if (event.type === "payment_intent.succeeded" || event.type === "checkout.session.completed") {
       const session = event.data.object;
       console.log("Assinatura criada com sucesso!", session);
     }
