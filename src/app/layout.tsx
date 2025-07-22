@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     siteName: "ResumeSnap",
     images: [
       {
-        url: "https://resumesnap.com/og-image.png",
+        url: "https://resume-snap-app.vercel.app/og-image.png",
         width: 1200,
         height: 630,
         alt: "ResumeSnap - Create Professional Resumes Online",
