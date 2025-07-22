@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://resumesnap.com",
+    url: "https://resume-snap-app.vercel.app",
     title: "ResumeSnap - Create Professional Resumes Online",
     description:
       "Build stunning, professional resumes in minutes. Fast signup. Download as PDF instantly.",
