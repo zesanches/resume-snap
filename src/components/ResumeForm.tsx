@@ -123,7 +123,6 @@ export default function ResumeForm({
 
   const generatePDF = async () => {
     if (window !== undefined) {
-      // Check download limit
       const downloads = Number.parseInt(
         localStorage.getItem("resumeDownloads") || "0"
       );
@@ -137,7 +136,6 @@ export default function ResumeForm({
       setIsGenerating(true);
 
       try {
-        // Dynamic import for SSR safety
         const html2canvas = (await import("html2canvas-pro")).default;
         const { jsPDF } = await import("jspdf");
 
@@ -155,7 +153,6 @@ export default function ResumeForm({
 
         const imgData = canvas.toDataURL("image/png");
 
-        // Cria PDF usando jspdf
         const pdf = new jsPDF({
           orientation: "portrait",
           unit: "px",

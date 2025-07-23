@@ -47,7 +47,12 @@ export default function CreatePage() {
                 </span>
               </div>
             </div>
-            <PaymentButton />
+            <div className="flex items-center space-x-4">
+              <Link href="/login">
+                <Button variant="default">Login</Button>
+              </Link>
+              <PaymentButton />
+            </div>
           </div>
         </div>
       </header>

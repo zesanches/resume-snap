@@ -1,5 +1,4 @@
 export default function Loading() {
-  // This component is displayed while the payment data is being fetched
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center">
       <div className="bg-white p-8 rounded-lg shadow-md max-w-md w-full">

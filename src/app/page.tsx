@@ -13,9 +13,14 @@ export default function HomePage() {
             <FileText className="h-8 w-8 text-blue-600" />
             <span className="text-2xl font-bold text-gray-900">ResumeSnap</span>
           </div>
-          <Link href="/create">
-            <Button variant="outline">Create Resume</Button>
-          </Link>
+          <div className="flex items-center space-x-4">
+            <Link href="/login">
+              <Button variant="default">Login</Button>
+            </Link>
+            <Link href="/create">
+              <Button variant="outline">Create Resume</Button>
+            </Link>
+          </div>
         </div>
       </header>
 
