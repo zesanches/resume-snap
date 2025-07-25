@@ -2,8 +2,11 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { FileText, Download, Zap, Check } from "lucide-react";
+import { auth } from "@/lib/auth";
 
-export default function HomePage() {
+export default async function HomePage() {
+  const session = await auth();
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       {/* Header */}
@@ -14,12 +17,16 @@ export default function HomePage() {
             <span className="text-2xl font-bold text-gray-900">ResumeSnap</span>
           </div>
           <div className="flex items-center space-x-4">
-            <Link href="/login">
-              <Button variant="default">Login</Button>
-            </Link>
-            <Link href="/create">
-              <Button variant="outline">Create Resume</Button>
-            </Link>
+            {!session?.user.id && (
+              <Link href="/login">
+                <Button variant="default">Login</Button>
+              </Link>
+            )}
+            {session?.user.id && (
+              <Link href="/create">
+                <Button variant="outline">Create Resume</Button>
+              </Link>
+            )}
           </div>
         </div>
       </header>

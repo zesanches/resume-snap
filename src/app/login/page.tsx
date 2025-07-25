@@ -1,52 +1,20 @@
-"use client";
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
+import { ArrowLeft, Chrome, FileText, Github } from "lucide-react";
+import { signIn } from "@/lib/auth";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { Input } from "@/components/ui/input";
-import { useAuth } from "@/hooks/useAuth";
-import { toast } from "sonner";
-import { ArrowLeft, FileText } from "lucide-react";
+export default async function LoginPage() {
+  const handleGithubLogin = async () => {
+    "use server";
 
-const loginSchema = z.object({
-  email: z.email("Invalid email address"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
-});
+    await signIn("github", { redirectTo: "/create" });
+  };
 
-type LoginFormData = z.infer<typeof loginSchema>;
+  const handleGoogleLogin = async () => {
+    "use server";
 
-export default function LoginPage() {
-  const { login } = useAuth();
-  const router = useRouter();
-
-  const { handleSubmit, register } = useForm<LoginFormData>({
-    resolver: zodResolver(loginSchema),
-    defaultValues: {
-      email: "",
-      password: "",
-    },
-  });
-
-  const onSubmit = async (data: LoginFormData) => {
-    try {
-      await login(data.email, data.password);
-      toast("Login successful!", {
-        dismissible: true,
-        duration: 3000,
-      });
-      router.push("/");
-    } catch (error) {
-      console.error("Login error:", error);
-      toast("Login failed. Please check your credentials.", {
-        dismissible: true,
-        duration: 5000,
-      });
-    }
+    await signIn("google", { redirectTo: "/create" });
   };
 
   return (
@@ -71,37 +39,34 @@ export default function LoginPage() {
           </div>
         </div>
       </header>
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <Card className="w-full max-w-md">
+      <div className="min-h-screen bg-gray-50 flex items-start justify-center">
+        <Card className="w-full max-w-md mt-8">
           <CardHeader>
             <CardTitle className="text-center text-2xl font-bold">
               Login to ResumeSnap
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-              <Input
-                {...register("email")}
-                placeholder="Email"
-                type="email"
-                required
-              />
-              <Input
-                {...register("password")}
-                placeholder="Password"
-                type="password"
-                required
-              />
-              <Button type="submit" className="w-full">
-                Login
-              </Button>
-            </form>
-            <p className="mt-4 text-sm text-center text-gray-600">
-              Don&apos;t have an account?{" "}
-              <Link href="/register" className="text-blue-600 hover:underline">
-                Register here
-              </Link>
-            </p>
+          <CardContent className="flex flex-col space-y-4">
+            <Button
+              variant="outline"
+              className="w-full"
+              onClick={handleGithubLogin}
+            >
+              <span className="flex items-center justify-center space-x-2">
+                <Github />
+                <span>Login with GitHub</span>
+              </span>
+            </Button>
+            <Button
+              variant="outline"
+              className="w-full"
+              onClick={handleGoogleLogin}
+            >
+              <span className="flex items-center justify-center space-x-2">
+                <Chrome />
+                <span>Login with Google</span>
+              </span>
+            </Button>
           </CardContent>
         </Card>
       </div>
