@@ -10,21 +10,26 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Plus, Trash2, Download } from "lucide-react";
 import type { ResumeData, WorkExperience, Education } from "@/types/resume";
+import { Session } from "next-auth";
+import { incrementUserDownloadQuantity } from "@/lib/increment-download";
 
 interface ResumeFormProps {
   resumeData: ResumeData;
   setResumeData: (data: ResumeData) => void;
-  onUpgradeNeeded: () => void;
+  session: Session | null;
 }
 
 export default function ResumeForm({
   resumeData,
   setResumeData,
-  onUpgradeNeeded,
+  session,
 }: ResumeFormProps) {
+  const qttDownloads = session?.user.downloadQuantity;
   const [isGenerating, setIsGenerating] = useState(false);
   const [skillInput, setSkillInput] = useState("");
-  const localStorage = window.localStorage;
+  const [downloadCount, setDownloadCount] = useState(qttDownloads);
+  const isPro = session?.user.plan === "PRO";
+  const remainingDownloads = isPro ? "Unlimited" : `${downloadCount}/2`;
 
   const updatePersonalInfo = (field: string, value: string) => {
     setResumeData({
@@ -122,74 +127,50 @@ export default function ResumeForm({
   };
 
   const generatePDF = async () => {
-    if (window !== undefined) {
-      const downloads = Number.parseInt(
-        localStorage.getItem("resumeDownloads") || "0"
-      );
-      const isPro = localStorage.getItem("resumeProUser") === "true";
+    setIsGenerating(true);
 
-      if (!isPro && downloads >= 2) {
-        onUpgradeNeeded();
-        return;
+    try {
+      const html2canvas = (await import("html2canvas-pro")).default;
+      const { jsPDF } = await import("jspdf");
+
+      const element = document.getElementById("resume-preview");
+      if (!element) {
+        throw new Error("Resume preview not found");
       }
 
-      setIsGenerating(true);
+      const canvas = await html2canvas(element, {
+        scale: 0.5,
+        useCORS: true,
+        allowTaint: true,
+        logging: true,
+      });
 
-      try {
-        const html2canvas = (await import("html2canvas-pro")).default;
-        const { jsPDF } = await import("jspdf");
+      const imgData = canvas.toDataURL("image/png");
 
-        const element = document.getElementById("resume-preview");
-        if (!element) {
-          throw new Error("Resume preview not found");
-        }
+      const pdf = new jsPDF({
+        orientation: "portrait",
+        unit: "px",
+        format: [canvas.width, canvas.height],
+      });
 
-        const canvas = await html2canvas(element, {
-          scale: 0.5,
-          useCORS: true,
-          allowTaint: true,
-          logging: true,
+      pdf.addImage(imgData, "PNG", 0, 0, canvas.width, canvas.height);
+      pdf.save(`${resumeData.personalInfo.fullName || "resume"}.pdf`);
+
+      if (!isPro) {
+        setDownloadCount((prevCount) => {
+          const newCount = !!prevCount ? prevCount + 1 : 1;
+
+          return newCount;
         });
-
-        const imgData = canvas.toDataURL("image/png");
-
-        const pdf = new jsPDF({
-          orientation: "portrait",
-          unit: "px",
-          format: [canvas.width, canvas.height],
-        });
-
-        pdf.addImage(imgData, "PNG", 0, 0, canvas.width, canvas.height);
-        pdf.save(`${resumeData.personalInfo.fullName || "resume"}.pdf`);
-
-        if (!isPro) {
-          localStorage.setItem("resumeDownloads", (downloads + 1).toString());
-        }
-      } catch (error) {
-        console.error("Error generating PDF:", error);
-        alert("Error generating PDF. Please try again.");
-      } finally {
-        setIsGenerating(false);
+        incrementUserDownloadQuantity(session?.user.id || "");
       }
+    } catch (error) {
+      console.error("Error generating PDF:", error);
+      alert("Error generating PDF. Please try again.");
+    } finally {
+      setIsGenerating(false);
     }
   };
-
-  if (window === undefined) {
-    return (
-      <div className="text-center py-8">
-        <p className="text-gray-500">
-          This form is only available in the browser. Please open this page in a
-          web browser to create your resume.
-        </p>
-      </div>
-    );
-  }
-
-  const downloads = Number.parseInt(
-    localStorage.getItem("resumeDownloads") || "0"
-  );
-  const isPro = localStorage.getItem("resumeProUser") === "true";
-  const remainingDownloads = isPro ? "∞" : Math.max(0, 2 - downloads);
 
   return (
     <div className="space-y-6">
@@ -537,16 +518,19 @@ export default function ResumeForm({
               </div>
               <Button
                 onClick={generatePDF}
-                disabled={isGenerating || (!isPro && downloads >= 2)}
+                disabled={
+                  isGenerating ||
+                  (!isPro && !!downloadCount && downloadCount >= 2)
+                }
                 size="lg"
               >
                 <Download className="h-4 w-4 mr-2" />
                 {isGenerating ? "Generating..." : "Download PDF"}
               </Button>
             </div>
-            {!isPro && downloads >= 2 && (
+            {!isPro && !!downloadCount && downloadCount >= 2 && (
               <p className="text-sm text-amber-600 bg-amber-50 p-3 rounded">
-                You&apos;ve used all your free downloads. Upgrade to Pro for
+                You&apos;ve used all your free downloads. Upgrade to PREMIUM for
                 unlimited access!
               </p>
             )}

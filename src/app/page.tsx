@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { FileText, Download, Zap, Check } from "lucide-react";
+import { Header } from "@/components/header";
 import { auth } from "@/lib/auth";
 
 export default async function HomePage() {
@@ -10,26 +11,26 @@ export default async function HomePage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       {/* Header */}
-      <header className="container mx-auto px-4 py-6">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <FileText className="h-8 w-8 text-blue-600" />
-            <span className="text-2xl font-bold text-gray-900">ResumeSnap</span>
-          </div>
+      <Header.Container>
+        <Header.Content>
           <div className="flex items-center space-x-4">
             {!session?.user.id && (
-              <Link href="/login">
-                <Button variant="default">Login</Button>
-              </Link>
+              <Header.Button href="/login" variant="default">
+                Login
+              </Header.Button>
             )}
+
             {session?.user.id && (
-              <Link href="/create">
-                <Button variant="outline">Create Resume</Button>
-              </Link>
+              <>
+                <Header.Button href="/create" variant="secondary">
+                  Create Resume
+                </Header.Button>
+                <Header.Account session={session} />
+              </>
             )}
           </div>
-        </div>
-      </header>
+        </Header.Content>
+      </Header.Container>
 
       {/* Hero Section */}
       <section className="container mx-auto px-4 py-16 text-center">

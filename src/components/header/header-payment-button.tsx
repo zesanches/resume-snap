@@ -1,8 +1,20 @@
 import { Button } from "@/components/ui/button";
 import { Crown } from "lucide-react";
+import { Session } from "next-auth";
+import { redirect } from "next/navigation";
 
-export default function PaymentButton() {
+type PaymentButtonProps = {
+  session: Session | null;
+};
+
+export default function PaymentButton({ session }: PaymentButtonProps) {
   const handleUpgrade = async () => {
+    "use server";
+
+    if (!session?.user.id) {
+      redirect("/login");
+    }
+
     const res = await fetch("/api/create-checkout-session", {
       method: "POST",
     });
@@ -20,7 +32,6 @@ export default function PaymentButton() {
     <div className="flex items-center space-x-2">
       <form action={handleUpgrade}>
         <Button
-          onClick={handleUpgrade}
           size="sm"
           className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
         >
