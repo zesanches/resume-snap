@@ -16,7 +16,9 @@ export default async function Create() {
               </Header.Button>
             )}
 
-            <Header.PaymentButton session={session} />
+            {session?.user.plan === "FREE" && (
+              <Header.PaymentButton session={session} />
+            )}
 
             {session?.user.id && <Header.Account session={session} />}
           </div>

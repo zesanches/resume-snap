@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { LogOut, User } from "lucide-react";
+import { Crown, LogOut, User } from "lucide-react";
 import { signOut } from "next-auth/react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Session } from "next-auth";
@@ -12,7 +12,6 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import { Badge } from "../ui/badge";
 
 type HeaderAccountProps = {
   session: Session;
@@ -39,9 +38,7 @@ export default function HeaderAccount({ session }: HeaderAccountProps) {
             </Avatar>
             <span className="text-sm font-medium">{session.user.name}</span>
             {session.user.plan === "PRO" && (
-              <Badge variant="secondary" className="text-indigo-900">
-                PREMIUM
-              </Badge>
+              <Crown className="h-6 w-6 text-indigo-900" />
             )}
           </div>
         </DropdownMenuTrigger>
