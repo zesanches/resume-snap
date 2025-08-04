@@ -14,14 +14,12 @@ export async function GET(req: NextRequest) {
       expand: ["payment_intent", "subscription"],
     });
 
-    const paymentIntent = session.payment_intent;
     const subscription = session.subscription;
 
     return NextResponse.json({
       sessionId: session.id,
-      customerEmail: session.customer_email,
+      customerEmail: session.customer_details?.email,
       subscriptionId: typeof subscription === "object" ? subscription?.id : null,
-      paymentIntentId: typeof paymentIntent === "object" ? paymentIntent?.id : null,
       amountTotal: session.amount_total,
     });
   } catch (error) {

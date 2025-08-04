@@ -1,9 +1,12 @@
+import { NextRequest } from "next/server";
 import Stripe from "stripe";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY ? process.env.STRIPE_SECRET_KEY : "");
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
-export async function POST() {
+export async function POST(req: NextRequest) {
   try {
+    const body = await req.json();
+    const userId = body.userId;
     const session = await stripe.checkout.sessions.create({
       mode: "subscription",
       payment_method_types: ["card"],
@@ -15,6 +18,9 @@ export async function POST() {
       ],
       success_url: `${process.env.DOMAIN}/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.DOMAIN}/`,
+      metadata: {
+        userId: userId,
+      },
     });
 
     return new Response(JSON.stringify({ url: session.url }), { status: 200 });

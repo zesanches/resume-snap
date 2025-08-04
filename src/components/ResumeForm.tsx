@@ -139,9 +139,9 @@ export default function ResumeForm({
       }
 
       const canvas = await html2canvas(element, {
-        scale: 0.5,
+        scale: 2,
         useCORS: true,
-        allowTaint: true,
+        allowTaint: false,
         logging: true,
       });
 
@@ -149,11 +149,16 @@ export default function ResumeForm({
 
       const pdf = new jsPDF({
         orientation: "portrait",
-        unit: "px",
-        format: [canvas.width, canvas.height],
+        unit: "mm",
+        format: "a4",
       });
 
-      pdf.addImage(imgData, "PNG", 0, 0, canvas.width, canvas.height);
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const imgProps = pdf.getImageProperties(imgData);
+      const pdfWidth = pageWidth;
+      const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+      pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
       pdf.save(`${resumeData.personalInfo.fullName || "resume"}.pdf`);
 
       if (!isPro) {

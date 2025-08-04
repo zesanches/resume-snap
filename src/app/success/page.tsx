@@ -69,7 +69,7 @@ export default function SuccessCheckoutPage() {
             href="/create"
             className="inline-block px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
           >
-            Go to Dashboard
+            Go to Home
           </a>
         </div>
         <p className="text-sm text-gray-500 text-center mt-4">
